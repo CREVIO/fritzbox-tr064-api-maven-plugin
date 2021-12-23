@@ -26,20 +26,18 @@
 package de.crevio.fritzbox.tr064.api;
 
 import java.io.IOException;
-
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.UnmarshalException;
-import javax.xml.bind.Unmarshaller;
 
 import de.crevio.fritzbox.tr064.api.beans.ActionType;
 import de.crevio.fritzbox.tr064.api.beans.ScpdType;
 import de.crevio.fritzbox.tr064.api.beans.ScpdType2;
 import de.crevio.fritzbox.tr064.api.beans.ServiceType;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.UnmarshalException;
+import jakarta.xml.bind.Unmarshaller;
 
 public class Service {
 

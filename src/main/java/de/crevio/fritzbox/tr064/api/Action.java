@@ -34,14 +34,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPBodyElement;
-import javax.xml.soap.SOAPEnvelope;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.soap.SOAPPart;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.StringEntity;
 
@@ -49,6 +41,13 @@ import de.crevio.fritzbox.tr064.api.beans.ActionType;
 import de.crevio.fritzbox.tr064.api.beans.ArgumentType;
 import de.crevio.fritzbox.tr064.api.beans.ServiceType;
 import de.crevio.fritzbox.tr064.api.beans.StateVariableType;
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.SOAPBody;
+import jakarta.xml.soap.SOAPBodyElement;
+import jakarta.xml.soap.SOAPEnvelope;
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPMessage;
+import jakarta.xml.soap.SOAPPart;
 
 public class Action {
 

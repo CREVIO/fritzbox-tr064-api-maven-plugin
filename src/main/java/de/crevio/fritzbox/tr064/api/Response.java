@@ -33,10 +33,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
 
 import org.w3c.dom.NodeList;
+
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPMessage;
 
 public class Response {
 
