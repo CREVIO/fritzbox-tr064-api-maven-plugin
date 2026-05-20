@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+  <s:Header/>
+  <s:Body>
+    <u:GetCommonLinkPropertiesResponse xmlns:u="urn:dslforum-org:service:WANCommonInterfaceConfig:1">
+      <NewWANAccessType>DSL</NewWANAccessType>
+      <NewLayer1UpstreamMaxBitRate>50000</NewLayer1UpstreamMaxBitRate>
+    </u:GetCommonLinkPropertiesResponse>
+  </s:Body>
+</s:Envelope>

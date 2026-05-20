@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<root xmlns="urn:schemas-upnp-org:device-1-0">
+  <specVersion>
+    <major>1</major>
+    <minor>0</minor>
+  </specVersion>
+  <device xmlns="urn:dslforum-org:device-1-0">
+    <deviceType>urn:schemas-upnp-org:device:InternetGatewayDevice:1</deviceType>
+    <friendlyName>FRITZ!Box 7590</friendlyName>
+    <manufacturer>AVM</manufacturer>
+    <manufacturerURL>http://www.avm.de</manufacturerURL>
+    <modelDescription>FRITZ!Box 7590</modelDescription>
+    <modelName>FRITZ!Box 7590</modelName>
+    <modelNumber>avm</modelNumber>
+    <modelURL>http://www.avm.de</modelURL>
+    <UDN>uuid:75802409-bccf-40e7-8e6c-testdevice002</UDN>
+    <serviceList>
+      <service>
+        <serviceType>urn:dslforum-org:service:WANCommonInterfaceConfig:1</serviceType>
+        <serviceId>urn:WANCommonInterfaceConfig-com:serviceId:WANCommonInterfaceConfig1</serviceId>
+        <controlURL>/igdupnp/control/WANCommonIFC1</controlURL>
+        <eventSubURL>/igdupnp/control/WANCommonIFC1</eventSubURL>
+        <SCPDURL>/igdicfgSCPD.xml</SCPDURL>
+      </service>
+    </serviceList>
+  </device>
+</root>

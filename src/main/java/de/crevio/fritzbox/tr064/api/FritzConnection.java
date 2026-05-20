@@ -31,24 +31,22 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpRequest;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.AuthCache;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.impl.client.BasicAuthCache;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
+import org.apache.hc.client5.http.auth.AuthScope;
+import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
+import org.apache.hc.client5.http.impl.auth.BasicAuthCache;
+import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
+import org.apache.hc.client5.http.impl.auth.BasicScheme;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.protocol.HttpClientContext;
+import org.apache.hc.core5.http.ClassicHttpRequest;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.protocol.HttpContext;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
 
 import de.crevio.fritzbox.tr064.api.beans.DeviceType;
 import de.crevio.fritzbox.tr064.api.beans.RootType;
@@ -92,22 +90,22 @@ public class FritzConnection {
         this.pwd = pwd;
     }
 
-    public void init() throws ClientProtocolException, IOException, JAXBException {
+    public void init() throws IOException, JAXBException {
         if (user != null && pwd != null) {
-            CredentialsProvider credsProvider = new BasicCredentialsProvider();
-            credsProvider.setCredentials(AuthScope.ANY,
-                    new UsernamePasswordCredentials(user, pwd));
-            AuthCache authCache = new BasicAuthCache();
+            BasicCredentialsProvider credsProvider = new BasicCredentialsProvider();
+            credsProvider.setCredentials(new AuthScope(null, -1),
+                    new UsernamePasswordCredentials(user, pwd.toCharArray()));
+            BasicAuthCache authCache = new BasicAuthCache();
+            authCache.put(targetHost, new BasicScheme());
             context.setCredentialsProvider(credsProvider);
             context.setAuthCache(authCache);
             readTR64();
         } else {
             readIGDDESC();
         }
-
     }
 
-    private void readTR64() throws ClientProtocolException, IOException, JAXBException {
+    private void readTR64() throws IOException, JAXBException {
         InputStream xml = getXMLIS("/" + FRITZ_TR64_DESC_FILE);
         JAXBContext jaxbContext = JAXBContext.newInstance(RootType.class);
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
@@ -116,7 +114,7 @@ public class FritzConnection {
         getServicesFromDevice(device);
     }
 
-    private void readIGDDESC() throws ClientProtocolException, IOException, JAXBException {
+    private void readIGDDESC() throws IOException, JAXBException {
         InputStream xml = getXMLIS("/" + FRITZ_IGD_DESC_FILE);
         JAXBContext jaxbContext = JAXBContext.newInstance(RootType2.class);
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
@@ -129,7 +127,6 @@ public class FritzConnection {
         for (ServiceType sT : device.getServiceList().getService()) {
             String[] tmp = sT.getServiceType().split(":");
             String key = tmp[tmp.length - 2] + ":" + tmp[tmp.length - 1];
-
             services.put(key, new Service(sT, this));
         }
         if (device.getDeviceList() != null) {
@@ -139,22 +136,14 @@ public class FritzConnection {
         }
     }
 
-    private InputStream httpRequest(HttpHost target, HttpRequest request, HttpContext context) throws IOException {
-        CloseableHttpResponse response = null;
+    private InputStream httpRequest(HttpHost target, ClassicHttpRequest request, HttpContext context) throws IOException {
         byte[] content = null;
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()){
-            response = httpClient.execute(target, request, context);
-            content = EntityUtils.toByteArray(response.getEntity());
-        } catch (IOException e) {
-            throw e;
-        } finally {
-            if (response != null) {
-                response.close();
-                if (response.getStatusLine().getStatusCode() != 200) {
-                    throw new IOException(response.getStatusLine().toString());
-                }
+        try (CloseableHttpClient httpClient = HttpClients.createDefault();
+             CloseableHttpResponse response = httpClient.execute(target, request, context)) {
+            if (response.getCode() != 200) {
+                throw new IOException(response.getCode() + " " + response.getReasonPhrase());
             }
-
+            content = EntityUtils.toByteArray(response.getEntity());
         }
         if (content != null) {
             return new ByteArrayInputStream(content);
@@ -166,7 +155,6 @@ public class FritzConnection {
     protected InputStream getXMLIS(String fileName) throws IOException {
         HttpGet httpget = new HttpGet(fileName);
         return httpRequest(targetHost, httpget, context);
-
     }
 
     protected InputStream getSOAPXMLIS(String fileName, String urn, HttpEntity entity) throws IOException {

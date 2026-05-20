@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+  <s:Header/>
+  <s:Body>
+    <u:GetInfoResponse xmlns:u="urn:dslforum-org:service:DeviceConfig:1">
+      <NewModelName>FRITZ!Box 7590</NewModelName>
+    </u:GetInfoResponse>
+  </s:Body>
+</s:Envelope>
