@@ -4,7 +4,8 @@
  *===========================================
  *
  * Copyright 2015 Marin Pollmann <pollmann.m@gmail.com>
- * 
+ *
+
  *
  ***********************************************************************************************************************
  *
@@ -24,6 +25,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -34,8 +36,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.entity.StringEntity;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.io.entity.StringEntity;
 
 import de.crevio.fritzbox.tr064.api.beans.ActionType;
 import de.crevio.fritzbox.tr064.api.beans.ArgumentType;
@@ -184,12 +186,12 @@ public class Action {
             }
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             soapMsg.writeTo(stream);
-            message = new String(stream.toByteArray(), "utf-8");
+            message = stream.toString(StandardCharsets.UTF_8);
         } catch (SOAPException e) {
             e.printStackTrace();
         }
 
-        httpEntity = new StringEntity(message);
+        httpEntity = new StringEntity(message, StandardCharsets.UTF_8);
 
         return getMessage(connection.getSOAPXMLIS(serviceXML.getControlURL(),
                 serviceXML.getServiceType() + "#" + this.getName(), httpEntity));

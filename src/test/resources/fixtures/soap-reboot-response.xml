@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+  <s:Header/>
+  <s:Body>
+    <u:RebootResponse xmlns:u="urn:dslforum-org:service:DeviceConfig:1">
+    </u:RebootResponse>
+  </s:Body>
+</s:Envelope>
